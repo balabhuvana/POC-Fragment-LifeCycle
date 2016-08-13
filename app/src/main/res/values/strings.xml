@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">POC-Fragment-LifeCycle</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="main_tv">Main Activity</string>
+    <string name="my_list_text">My ListView</string>
+    <string name="content_text">Temp Value</string>
+    <string-array name="fruits">
+        <item>Apple</item>
+        <item>Banana</item>
+        <item>Orange</item>
+        <item>Tomatto</item>
+        <item>Brinjal</item>
+    </string-array>
+</resources>
