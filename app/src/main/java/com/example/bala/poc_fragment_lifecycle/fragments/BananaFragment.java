@@ -5,14 +5,20 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
-import com.example.bala.poc_fragment_lifecycle.CommonVariables;
 import com.example.bala.poc_fragment_lifecycle.R;
+import com.example.bala.poc_fragment_lifecycle.common_inetface.BackPressHandlingInterface;
+import com.example.bala.poc_fragment_lifecycle.ui.DetailActivity;
+import com.example.bala.poc_fragment_lifecycle.ui.MainActivity;
 
 
 public class BananaFragment extends Fragment {
@@ -20,6 +26,12 @@ public class BananaFragment extends Fragment {
     private String TAG = BananaFragment.class.getSimpleName();
     private TextView mTextView = null;
     private Bundle mBundle = null;
+    private Button mBtnBack, mBtnNext;
+    private String SELECTED_VALUE = "selected_fruits";
+    private String ORANGE_FRAGMENT = "com.example.bala.poc_fragment_lifecycle.fragments.ORANGE_FRAGMENT";
+    boolean DUAL_PANE = false;
+    private BackPressHandlingInterface mBackPressHandlingListener;
+
 
     public static BananaFragment newInstance(int columnCount) {
         BananaFragment fragment = new BananaFragment();
@@ -32,6 +44,8 @@ public class BananaFragment extends Fragment {
     public void onAttach(Activity activity) {
         Log.d(TAG, "onAttach");
         super.onAttach(activity);
+
+
     }
 
     @Override
@@ -52,9 +66,38 @@ public class BananaFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View mView = inflater.inflate(R.layout.fragment_content_view, container, false);
-        mTextView = (TextView) mView.findViewById(R.id.contentTv);
-
+        intViews(mView);
+        Log.d(TAG, "onCreateView");
         return mView;
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        Log.d(TAG, "onViewCreated");
+    }
+
+    private void intViews(View oView) {
+        try {
+            mTextView = (TextView) oView.findViewById(R.id.contentTv);
+            mBtnBack = (Button) oView.findViewById(R.id.btnBack);
+            mBtnNext = (Button) oView.findViewById(R.id.btnNext);
+            mBtnNext.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    transactionProcess();
+                }
+            });
+            mBtnBack.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                   backPressHandling();
+                }
+            });
+
+        } catch (Exception exp) {
+            exp.printStackTrace();
+        }
     }
 
     @Override
@@ -67,50 +110,99 @@ public class BananaFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+        Log.d(TAG, "onStart");
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        Log.d(TAG, "onResume");
     }
 
     @Override
     public void onPause() {
         super.onPause();
+        Log.d(TAG, "onPause");
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+        Log.d(TAG, "onSaveInstanceState");
     }
 
     @Override
     public void onStop() {
         super.onStop();
+        Log.d(TAG, "onStop");
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        Log.d(TAG, "onDestroyView");
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
+        Log.d(TAG, "onDestroy");
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-
+        Log.d(TAG, "onDetach");
     }
 
     private void assignValue() {
         try {
 
             if (mBundle != null) {
-                mTextView.setText(mBundle.getString(CommonVariables.SELECTED_VALUE));
+                mTextView.setText(mBundle.getString(SELECTED_VALUE));
             }
+        } catch (Exception exp) {
+            exp.printStackTrace();
+        }
+    }
+
+
+    private void transactionProcess() {
+        try {
+            FrameLayout mFrameLayout = (FrameLayout) getActivity().findViewById(R.id.detailscontainer);
+
+            if (mFrameLayout != null && mFrameLayout.getVisibility() == View.VISIBLE) {
+                DUAL_PANE = true;
+            } else {
+                DUAL_PANE = false;
+            }
+            FragmentManager mFragmentManager = getFragmentManager();
+            FragmentTransaction mFragmentTransaction = mFragmentManager.beginTransaction();
+            Bundle mBundle = new Bundle();
+            mBundle.putString(SELECTED_VALUE, "Hello Orange");
+            OrangeFragment mOrangeFragment = (OrangeFragment) mFragmentManager.findFragmentByTag(ORANGE_FRAGMENT);
+            if (mOrangeFragment == null) {
+                mOrangeFragment = OrangeFragment.newInstance(1);
+            }
+            mOrangeFragment.setArguments(mBundle);
+            if (DUAL_PANE) {
+                mFragmentTransaction.replace(R.id.detailscontainer, mOrangeFragment);
+            } else {
+                mFragmentTransaction.replace(R.id.listcontainer, mOrangeFragment, ORANGE_FRAGMENT);
+            }
+            mFragmentTransaction.addToBackStack(null);
+            mFragmentTransaction.commit();
+        } catch (Exception exp) {
+            exp.printStackTrace();
+        }
+    }
+
+    private void backPressHandling() {
+        try {
+            if (getFragmentManager().getBackStackEntryCount() > 1) {
+                mBackPressHandlingListener.backPressHandling();
+            }
+
         } catch (Exception exp) {
             exp.printStackTrace();
         }

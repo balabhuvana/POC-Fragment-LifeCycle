@@ -23,6 +23,7 @@ public class MyListFragment extends Fragment {
     private String title[];
     private ListView mListView;
     private ArrayAdapter mArrayAdapter;
+    private static View view;
 
     public static MyListFragment newInstance(int columnCount) {
         MyListFragment fragment = new MyListFragment();
@@ -59,6 +60,7 @@ public class MyListFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
         View mView = inflater.inflate(R.layout.fragment_list_view, container, false);
         mListView = (ListView) mView.findViewById(R.id.myListView);
 
@@ -114,6 +116,7 @@ public class MyListFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
+
     }
 
     @Override

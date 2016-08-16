@@ -4,12 +4,12 @@
     android:layout_height="match_parent"
     android:orientation="horizontal">
 
-    <FrameLayout
+    <fragment
         android:id="@+id/listcontainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <FrameLayout
+    <fragment
         android:id="@+id/detailscontainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

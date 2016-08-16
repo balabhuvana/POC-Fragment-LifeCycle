@@ -5,14 +5,9 @@
     android:orientation="horizontal">
 
     <FrameLayout
-        android:id="@+id/listcontainer"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
-    <FrameLayout
         android:id="@+id/detailscontainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone" />
+        />
 
 </LinearLayout>
